@@ -55,9 +55,11 @@ public class Main extends AbstractTransformation {
 		String uuidClockSeqLow = msgID.substring(18, 20);
 		String uuidNode = msgID.substring(20, 32);
 		
-		String msgUUID =
-		     uuidTimeLow + DASH + uuidTimeMid + DASH + uuidTimeHighAndVersion + DASH
-		     + uuidClockSeqAndReserved + uuidClockSeqLow + DASH + uuidNode;
+		String msgUUID 	= uuidTimeLow + DASH 
+						+ uuidTimeMid + DASH 
+						+ uuidTimeHighAndVersion + DASH
+						+ uuidClockSeqAndReserved + uuidClockSeqLow + DASH 
+						+ uuidNode;
 		
 		return msgUUID;
 	}
