@@ -31,8 +31,9 @@ public class Main extends AbstractTransformation {
 		     AuditAccess msgAuditAccessor = PublicAPIAccessFactory.getPublicAPIAccess().getAuditAccess();
 		     // Add new audit log entry with status ‘Success’ to the audit log of the message using the constructed message key.
 		     msgAuditAccessor.addAuditLogEntry(msgKey, AuditLogStatus.SUCCESS, "Mapping started!");
-		     msgAuditAccessor.addAuditLogEntry(msgKey, AuditLogStatus.SUCCESS, "MsgUUID: " + msgUUID);
-		     msgAuditAccessor.addAuditLogEntry(msgKey, AuditLogStatus.SUCCESS, "MsgKey: " + msgKey);
+		     msgAuditAccessor.addAuditLogEntry(msgKey, AuditLogStatus.SUCCESS, "#MessageID: " + msgID);
+		     msgAuditAccessor.addAuditLogEntry(msgKey, AuditLogStatus.SUCCESS, "#MsgUUID: " + msgUUID);
+		     msgAuditAccessor.addAuditLogEntry(msgKey, AuditLogStatus.SUCCESS, "#MsgKey: " + msgKey);
 		     msgAuditAccessor.addAuditLogEntry(msgKey, AuditLogStatus.SUCCESS, "Mapping done!");
 		     
 		     } catch (MessagingException e) {
