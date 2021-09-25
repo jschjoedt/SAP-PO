@@ -43,6 +43,13 @@ public class Main extends AbstractTransformation {
 		
 	}
 
+	
+	/**
+	 * Generate a valid UUID based on the messageID - basically adding hyphens '-' to the ID. 
+	 * e.g. c710a370fdd34534a06a354bca0c7230 => c710a370-fdd3-4534-a06a-354bca0c7230
+	 * @param msgID
+	 * @return	msgUUID
+	 */
 	private String generateMessageUUID(String msgID) {
 		// Convert message ID to UUID format (in compliance to RFC 4122).
 		// UUID format is used by Advanced Adapter Engine for identifiers of processed messages.
