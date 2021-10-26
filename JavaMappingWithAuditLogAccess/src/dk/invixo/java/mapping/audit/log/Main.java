@@ -21,6 +21,7 @@ public class Main extends AbstractTransformation {
 		// of transformation input (com.sap.aii.mapping.api.TransformationInput).
 		String msgID = in.getInputHeader().getMessageId();
 		String msgUUID = generateMessageUUID(msgID);
+		
 		// Construct message key (com.sap.engine.interfaces.messaging.api.MessageKey)
 		// for retrieved message ID and outbound message direction (com.sap.engine.interfaces.messaging.api.MessageDirection).
 		MessageKey msgKey = new MessageKey(msgUUID, MessageDirection.OUTBOUND);
@@ -29,6 +30,7 @@ public class Main extends AbstractTransformation {
 		     // Retrieve instance of audit log accessor (com.sap.engine.interfaces.messaging.api.auditlog.AuditAccess)
 		     // using public API access factory (com.sap.engine.interfaces.messaging.api.PublicAPIAccessFactory).
 		     AuditAccess msgAuditAccessor = PublicAPIAccessFactory.getPublicAPIAccess().getAuditAccess();
+		    
 		     // Add new audit log entry with status ‘Success’ to the audit log of the message using the constructed message key.
 		     msgAuditAccessor.addAuditLogEntry(msgKey, AuditLogStatus.SUCCESS, "Mapping started!");
 		     msgAuditAccessor.addAuditLogEntry(msgKey, AuditLogStatus.SUCCESS, "#MessageID: " + msgID);
@@ -36,10 +38,10 @@ public class Main extends AbstractTransformation {
 		     msgAuditAccessor.addAuditLogEntry(msgKey, AuditLogStatus.SUCCESS, "#MsgKey: " + msgKey);
 		     msgAuditAccessor.addAuditLogEntry(msgKey, AuditLogStatus.SUCCESS, "Mapping done!");
 		     
-		     } catch (MessagingException e) {
-		          // Exception handling logic.
-		          e.printStackTrace();
-		     }
+	     } catch (MessagingException e) {
+	          // Exception handling logic.
+	          e.printStackTrace();
+	     }
 		
 	}
 
@@ -54,7 +56,6 @@ public class Main extends AbstractTransformation {
 		// Convert message ID to UUID format (in compliance to RFC 4122).
 		// UUID format is used by Advanced Adapter Engine for identifiers of processed messages.
 		// For the sake of simplicity, conversion is done manually - alternatively, specific libraries can be used for this.
-		
 		String uuidTimeLow = msgID.substring(0, 8);
 		String uuidTimeMid = msgID.substring(8, 12);
 		String uuidTimeHighAndVersion = msgID.substring(12, 16);
