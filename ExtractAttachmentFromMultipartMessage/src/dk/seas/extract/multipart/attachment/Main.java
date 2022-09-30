@@ -15,7 +15,6 @@ import javax.mail.util.ByteArrayDataSource;
 
 public class Main {
 
-	private static final String CONTENT_TYPE = "multipart/mixed";
 	private static final String CONTENT_DISPOSITION = "attachment";
 	private static final String CONTENT_MAINPAYLOAD_DESCRIPTION = "MainDocument";
 	private static final String TEST_DATA_PATH = "./testData/";
@@ -41,17 +40,17 @@ public class Main {
 	private static void processFile(File f) throws IOException, MessagingException {
 		InputStream is = new FileInputStream(f);
 
-		MimeMultipart mmp = extractMulitipartFromMessage(is);
+		MimeMultipart mmp = extractMulitipartFromMessage(is, "multipart/related");
 
 		DataHandler dh = extractBodyPartFromMultipart(mmp, CONTENT_DISPOSITION, CONTENT_MAINPAYLOAD_DESCRIPTION);
 
 		if (EMBEDDED_MULTIPART_MESSAGE) {
 			// Extract PDF document from MainDocument (Embedded multipart in Mainpayload)
-			mmp = extractMulitipartFromMessage(dh.getInputStream());
+			mmp = extractMulitipartFromMessage(dh.getInputStream(), "application/pdf");
 			dh = extractBodyPartFromMultipart(mmp, CONTENT_DISPOSITION, "N/A");
 		}
 		
-		writeAttachmentToDisk(f.getName(), dh);
+		writeAttachmentToDisk(TEST_DATA_PATH, f.getName(), dh);
 
 	}
 
@@ -65,8 +64,8 @@ public class Main {
 	}
 
 
-	private static void writeAttachmentToDisk(String originalFileName, DataHandler dh) throws IOException {
-		File f = new File(TEST_DATA_PATH + originalFileName + " - " + dh.getName());
+	private static void writeAttachmentToDisk(String outputFolder, String originalFileName, DataHandler dh) throws IOException {
+		File f = new File(outputFolder + originalFileName + " - " + dh.getName());
 
 		FileOutputStream fos = new FileOutputStream(f);
 
@@ -77,9 +76,9 @@ public class Main {
 	}
 
 
-	private static MimeMultipart extractMulitipartFromMessage(InputStream payloadFile)
+	private static MimeMultipart extractMulitipartFromMessage(InputStream payloadFile, String contentType)
 			throws IOException, MessagingException {
-		ByteArrayDataSource ds = new ByteArrayDataSource(payloadFile, CONTENT_TYPE);
+		ByteArrayDataSource ds = new ByteArrayDataSource(payloadFile, contentType);
 		MimeMultipart mmp = new MimeMultipart(ds);
 		return mmp;
 	}
