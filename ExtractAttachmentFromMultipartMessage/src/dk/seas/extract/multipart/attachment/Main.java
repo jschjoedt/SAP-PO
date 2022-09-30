@@ -17,6 +17,7 @@ public class Main {
 
 	private static final String CONTENT_TYPE = "multipart/mixed";
 	private static final String CONTENT_DISPOSITION = "attachment";
+	private static final String CONTENT_MAINPAYLOAD_DESCRIPTION = "MainDocument";
 	private static final String TEST_DATA_PATH = "./testData/";
 	private static final String FILE_INPUT_EXTENSION_ACCEPTED = "txt";
 	private static final boolean EMBEDDED_MULTIPART_MESSAGE = true;
@@ -42,12 +43,12 @@ public class Main {
 
 		MimeMultipart mmp = extractMulitipartFromMessage(is);
 
-		DataHandler dh = extractMainDocumentFromMultipart(mmp);
+		DataHandler dh = extractBodyPartFromMultipart(mmp, CONTENT_DISPOSITION, CONTENT_MAINPAYLOAD_DESCRIPTION);
 
 		if (EMBEDDED_MULTIPART_MESSAGE) {
 			// Extract PDF document from MainDocument (Embedded multipart in Mainpayload)
 			mmp = extractMulitipartFromMessage(dh.getInputStream());
-			dh = extractBodyPartDataFromMultipart(mmp);
+			dh = extractBodyPartFromMultipart(mmp, CONTENT_DISPOSITION, "N/A");
 		}
 		
 		writeAttachmentToDisk(f.getName(), dh);
@@ -84,30 +85,31 @@ public class Main {
 	}
 
 
-	private static DataHandler extractBodyPartDataFromMultipart(MimeMultipart mmp) throws MessagingException, IOException {
+	private static DataHandler extractBodyPartFromMultipart(MimeMultipart mmp, String contentDisposition, String contentDescription) throws MessagingException, IOException {
 		DataHandler dh = null;
 
 		for (int i = 0; i < mmp.getCount(); i++) {
 			BodyPart bp = mmp.getBodyPart(i);
-			if (bp.getDisposition().equals(CONTENT_DISPOSITION)) {
-				System.out.println("Extracted from 'MainDocument': " + bp.getDisposition() + " : " + bp.getContentType());
+			if (bp.getDisposition().equals(contentDisposition) && getContentDescription(bp).equals(contentDescription)) {
+				System.out.println("Exctracted for further processing: " + bp.getDisposition() + " : " + bp.getContentType());
 				dh = bp.getDataHandler();
 			}
 		}
 
 		return dh;
 	}
-	
-	
-	private static DataHandler extractMainDocumentFromMultipart(MimeMultipart mmp) throws MessagingException, IOException {
-		DataHandler dh = null;
+
+
+	private static String getContentDescription(BodyPart bp) throws MessagingException {
+		String contentDescription = null;
 		
-		// MainDocument is always located in the second part of the soap message, first part is the SoapEnvelope
-		BodyPart bp = mmp.getBodyPart(1);
-		System.out.println("Extracted from 'Mainpayload': " + bp.getDescription() + " : " + bp.getContentType());
-		
-		dh = bp.getDataHandler();
-		
-		return dh;
+			contentDescription = bp.getDescription();
+			
+			if (contentDescription == null) {
+				// No content description is found in for the current BodyPart, return not applicable
+				contentDescription = "N/A";
+			}
+				
+		return contentDescription;
 	}
 }
