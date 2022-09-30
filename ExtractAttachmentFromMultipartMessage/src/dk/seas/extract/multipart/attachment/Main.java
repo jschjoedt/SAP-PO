@@ -106,7 +106,7 @@ public class Main {
 			contentDescription = bp.getDescription();
 			
 			if (contentDescription == null) {
-				// No content description is found in for the current BodyPart, return not applicable
+				// No content description is found in current BodyPart, return not applicable
 				contentDescription = "N/A";
 			}
 				
